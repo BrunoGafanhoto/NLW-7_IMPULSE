@@ -38,13 +38,15 @@ class AuthenticateUserService {
                 "Accept": "application/json"
             }
         })
-
+   
+        
         const response = await axios.get<IUser>("https://api.github.com/user", {
             headers: {
                 authorization: `Bearer ${accessTokenResponse.access_token}`
             }
         })
         const { login, id, avatar_url, name} = response.data;
+
 
         let user = await prismaClient.user.findFirst({
             where: {
