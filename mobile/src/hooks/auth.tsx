@@ -55,10 +55,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
                const authUrl = `https://github.com/login/oauth/authorize?scope=${SCOPE}&client_id=${CLIENT_ID}`;
                const authSessionResponse = await AuthSessions.startAsync({ authUrl }) as AuthorizationResponse;
                if (authSessionResponse.type === 'success' && authSessionResponse.params.error !== 'access_danied') {
-
+                    console.log(authSessionResponse.params);
                     const { data: authResponse } = await api.post<AuthResponse>('/authenticate', { code: authSessionResponse.params.code });
                     const { user, token } = authResponse;
-
+                   
                     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
                     await AsyncStorage.setItem(USER_STORAGE, JSON.stringify(user));
@@ -77,9 +77,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
      }
 
      const signOut = async () => {
-          setUser(null);
           await AsyncStorage.removeItem(USER_STORAGE);
           await AsyncStorage.removeItem(TOKEN_STORAGE);
+          setUser(null);
+
      }
 
      useEffect(() => {
